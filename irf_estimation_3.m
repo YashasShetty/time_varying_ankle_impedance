@@ -67,30 +67,40 @@ w = 10; % Window size for smoothing
 h_s = smooth_irf(h, i, w);
 
 % Estimate the best fit IRF model parameters
-[I_star, B_star, K_star] = estimate_irf_model_parameters(h_s);
+initial_guess = estimated_params; % These are just example values, replace with your estimates
+[I_star, B_star, K_star] = estimate_irf_model_parameters(h_s,initial_guess);
 
 % Calculate the ankle parameters
 [I_Ankle_star, B_Ankle_star, K_Ankle_star] = calculate_ankle_parameters(I_star, B_star, K_star, I_Abot, B_Abot, K_Abot);
+% Functions:
 
-
-% Calculate the smoothed IRF estimates (h_s(i))
-function h_s = smooth_irf(h, i, w)
-  N_w = length(h(max(1,i-floor(w/2)):min(length(h),i+floor(w/2))));
-  h_s = 1/N_w * sum(h(max(1,i-floor(w/2)):min(length(h),i+floor(w/2))));
+% Calculate the smoothed IRF estimates (h_s)
+function h_s = smooth_irf(h, w)
+  h_s = zeros(size(h));
+  for i = 1:length(h)
+    N_w = length(h(max(1,i-floor(w/2)):min(length(h),i+floor(w/2))));
+    h_s(i) = 1/N_w * sum(h(max(1,i-floor(w/2)):min(length(h),i+floor(w/2))));
+  end
 end
 
-% Estimate the best fit IRF model parameters (I*(i), B*(i), K*(i))
-function [I_star, B_star, K_star] = estimate_irf_model_parameters(h_s)
+% Estimate the best fit IRF model parameters (I_star, B_star, K_star)
+function [I_star, B_star, K_star] = estimate_irf_model_parameters(h_s, initial_guess)
   % Use an unconstrained nonlinear optimization method (Nelder-Mead simplex method)
-  [I_star, B_star, K_star] = fminsearch(@(params) mean((h_s - calculate_irf_model(params)).^2), [0, 0, 0]);
+  [params_star, ~] = fminsearch(@(params) mean((h_s - calculate_irf_model(params)).^2), initial_guess);
+  
+  % Extract individual parameters
+  I_star = params_star(1);
+  B_star = params_star(2);
+  K_star = params_star(3);
 end
 
-% Calculate the ankle parameters (I_Ankle*(i), B_Ankle*(i), K_Ankle*(i))
+% Calculate the ankle parameters (I_Ankle_star, B_Ankle_star, K_Ankle_star)
 function [I_Ankle_star, B_Ankle_star, K_Ankle_star] = calculate_ankle_parameters(I_star, B_star, K_star, I_Abot, B_Abot, K_Abot)
-  I_Ankle_star = I_star(1) - I_Abot;
+  I_Ankle_star = I_star - I_Abot;
   B_Ankle_star = B_star - B_Abot;
   K_Ankle_star = K_star - K_Abot;
 end
+
 
 % Calculate the IRF of the model (h_model(i))
 function h_model = calculate_irf_model(params)
@@ -98,6 +108,7 @@ function h_model = calculate_irf_model(params)
   I = params(1);
   B = params(2);
   K = params(3);
+  disp(['Inertia (m): ', num2str(I)]);
   
   % Simulate the response of the rotational system
   t = 0:0.01:0.08; % Define time vector
@@ -119,4 +130,5 @@ function h_model = calculate_irf_model(params)
   % Calculate the impulse response function
   h_model = theta_model;
 end
+
 
