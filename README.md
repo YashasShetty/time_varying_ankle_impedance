@@ -32,7 +32,7 @@ Anklebot dynamics in the dynamics of the entire system which is obtained from th
 
 Collaborators
 * **Yashas Shetty**<br>
-[![LinkedIn](https://www.linkedin.com/in/yashas-shetty-046858168/) 
+[![LinkedIn](https://www.linkedin.com/in/yashas-shetty-046858168/)] 
 * **Sameer Arjun Satheesh**<br>
-[![LinkedIn](https://www.linkedin.com/in/sameer-arjun-satheesh/) 
+[![LinkedIn](https://www.linkedin.com/in/sameer-arjun-satheesh/)] 
   
