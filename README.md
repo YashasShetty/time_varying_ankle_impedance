@@ -14,6 +14,7 @@ ankle rehabilitation by offering a dynamic understanding of ankle mechanics. The
 
 ## Methodology
 This method is based on the correlation approach, which assumes that every realization experiences the same underlying time-varying behaviour. By evaluating the input-output relation using data across realizations and time, the system dynamics can be identified at a specific time t
+
 ![Input Ankle Angle](https://github.com/YashasShetty/time_varying_ankle_impedance/assets/112819834/7ba95c0c-a438-4431-9913-7f40021df7f6)
 
 ![image1](https://github.com/YashasShetty/time_varying_ankle_impedance/assets/112819834/fb34c87f-2f78-49e7-83f2-1feeef3b2c83)
